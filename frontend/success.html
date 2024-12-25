@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful - Solana Distribution</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #9945FF;
+            --secondary-color: #14F195;
+            --background-dark: #1C1C1C;
+            --text-light: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .success-container {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            margin: 2rem;
+            text-align: center;
+        }
+
+        .success-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: cardAppear 0.6s ease-out;
+        }
+
+        @keyframes cardAppear {
+            0% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            margin: 0 auto 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: iconPop 0.5s ease-out 0.3s both;
+        }
+
+        @keyframes iconPop {
+            0% {
+                transform: scale(0);
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: none;
+            stroke: white;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            animation: checkmark 0.8s ease-out 0.8s both;
+        }
+
+        @keyframes checkmark {
+            0% {
+                stroke-dasharray: 100;
+                stroke-dashoffset: 100;
+            }
+            100% {
+                stroke-dasharray: 100;
+                stroke-dashoffset: 0;
+            }
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 0.6s ease-out 0.4s both;
+        }
+
+        .message {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            animation: fadeIn 0.6s ease-out 0.6s both;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .distribution-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            animation: fadeIn 0.6s ease-out 0.8s both;
+        }
+
+        .date {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin: 1rem 0;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: transform 0.2s;
+            animation: fadeIn 0.6s ease-out 1s both;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .wallet-address {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            word-break: break-all;
+            animation: fadeIn 0.6s ease-out 0.7s both;
+        }
+
+        @media (max-width: 600px) {
+            .success-container {
+                margin: 1rem;
+            }
+
+            .success-card {
+                padding: 2rem 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <div class="success-container">
+        <div class="success-card">
+            <div class="success-icon">
+                <svg viewBox="0 0 50 50">
+                    <path d="M10 25 L20 35 L40 15" />
+                </svg>
+            </div>
+            
+            <h1>Registration Successful!</h1>
+            
+            <div class="message">
+                Your application has been successfully registered for the Solana distribution program.
+            </div>
+
+            <div class="wallet-address" id="walletAddress">
+                <!-- Wallet address will be inserted here via JavaScript -->
+            </div>
+            
+            <div class="distribution-info">
+                <p>Next Distribution Epoch</p>
+                <div class="date">January 30th, 2025</div>
+                <p>Please ensure your wallet remains active until the distribution date.</p>
+            </div>
+
+            <p class="message">
+                You'll receive a confirmation email with additional details about the distribution process.
+            </p>
+            
+            <a href="index.html" class="back-button">Return to Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Initialize particles.js with the same configuration as the main page
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 50,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: '#9945FF'
+                },
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#14F195',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'repulse'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        // Get wallet address from URL parameters and display it
+        window.addEventListener('load', () => {
+            const params = new URLSearchParams(window.location.search);
+            const walletAddress = params.get('wallet');
+            if (walletAddress) {
+                document.getElementById('walletAddress').textContent = walletAddress;
+            }
+        });
+    </script>
+</body>
+</html>

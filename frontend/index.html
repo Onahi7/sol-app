@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Distribution Portal</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Add Solana Web3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/solana-web3.js/1.91.1/index.min.js"></script>
+    <style>
+        
+        :root {
+            --primary-color: #9945FF;
+            --secondary-color: #14F195;
+            --background-dark: #1C1C1C;
+            --text-light: #FFFFFF;
+            --nav-background: rgba(28, 28, 28, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding-top: 70px;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--nav-background);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 1rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            top: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(153, 69, 255, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-light);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        #loading {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .wallet-section {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .wallet-button {
+            background: linear-gradient(45deg, #9945FF, #14F195);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 1rem;
+        }
+
+        .wallet-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .wallet-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .wallet-status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .wallet-address {
+            font-family: monospace;
+            word-break: break-all;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            display: none;
+        }
+
+        .connected {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--nav-background);
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+  </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">SolanaPortal</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#eligibility">Eligibility</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="mobile-menu" onclick="toggleMenu()">☰</div>
+        </div>
+    </nav>
+
+    <div id="particles-js"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Solana Distribution Portal</h1>
+            <p>Complete the form to check your eligibility</p>
+        </div>
+
+        <div class="form-container">
+            <div class="wallet-section">
+                <button id="connectWallet" class="wallet-button">Connect Phantom Wallet</button>
+                <div id="walletStatus" class="wallet-status">Please connect your Phantom wallet</div>
+                <div id="walletAddress" class="wallet-address"></div>
+            </div>
+
+            <form id="distributionForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+
+                <button type="submit" disabled id="submitButton">Submit Application</button>
+                <div id="loading">Processing your application...</div>
+            </form>
+        </div>
+    </div>
+
+  
+
+    <script>
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 50,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: '#9945FF'
+                },
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#14F195',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'repulse'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+          // Phantom Wallet Integration
+          let walletAddress = null;
+
+const checkPhantomWallet = async () => {
+    try {
+        const isPhantomInstalled = window.phantom?.solana?.isPhantom;
+        
+        if (!isPhantomInstalled) {
+            document.getElementById('walletStatus').textContent = 
+                'Phantom wallet is not installed. Please install it first.';
+            document.getElementById('connectWallet').disabled = true;
+            return false;
+        }
+        return true;
+    } catch (err) {
+        console.error(err);
+        return false;
+    }
+};
+
+const connectWallet = async () => {
+    try {
+        const resp = await window.phantom?.solana?.connect();
+        walletAddress = resp.publicKey.toString();
+        
+        // Update UI
+        document.getElementById('walletStatus').innerHTML = 
+            '<span class="connected">✓ Wallet Connected</span>';
+        document.getElementById('walletAddress').style.display = 'block';
+        document.getElementById('walletAddress').textContent = walletAddress;
+        document.getElementById('connectWallet').textContent = 'Wallet Connected';
+        document.getElementById('connectWallet').disabled = true;
+        document.getElementById('submitButton').disabled = false;
+        
+        // Listen for wallet disconnect
+        window.phantom?.solana?.on('disconnect', disconnectWallet);
+        
+    } catch (err) {
+        console.error(err);
+        document.getElementById('walletStatus').textContent = 
+            'Error connecting to wallet: ' + err.message;
+    }
+};
+
+const disconnectWallet = () => {
+    walletAddress = null;
+    document.getElementById('walletStatus').textContent = 'Wallet disconnected';
+    document.getElementById('walletAddress').style.display = 'none';
+    document.getElementById('connectWallet').textContent = 'Connect Phantom Wallet';
+    document.getElementById('connectWallet').disabled = false;
+    document.getElementById('submitButton').disabled = true;
+};
+
+// Initialize wallet connection
+window.addEventListener('load', async () => {
+    const isPhantomInstalled = await checkPhantomWallet();
+    if (isPhantomInstalled) {
+        document.getElementById('connectWallet').addEventListener('click', connectWallet);
+    }
+});
+
+// Form submission with wallet and location
+document.getElementById('distributionForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    if (!walletAddress) {
+        alert('Please connect your Phantom wallet first');
+        return;
+    }
+
+    const loading = document.getElementById('loading');
+    loading.style.display = 'block';
+
+    try {
+        const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            wallet: walletAddress,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        };
+
+        // Here you would typically send this data to your backend
+        console.log('Form submitted with data:', formData);
+        
+        // Redirect to success page with wallet address
+        window.location.href = `success.html?wallet=${encodeURIComponent(walletAddress)}`;
+        
+    } catch (error) {
+        alert('Please enable location services to continue with your application.');
+    } finally {
+        loading.style.display = 'none';
+    }
+});
+
+    </script>
+</body>
+</html>
